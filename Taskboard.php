@@ -650,14 +650,14 @@ vote INT
 
 				//Uniqueness check (for enforcing originality
 				$sql[] = "CREATE TABLE IF NOT EXISTS uniqueHash (
-id INTEGER NOT NULL AUTO_INCREMENT,
+id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
 hash VARCHAR(25),
 created INT
 );";
 				
 				//Generalized 'session' holder. E.g. whos online recently.
 				$sql[] = "CREATE TABLE IF NOT EXISTS miniSessionHash (
-id INTEGER NOT NULL AUTO_INCREMENT,
+id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
 hash VARCHAR(25),
 info VARCHAR(25),
 intinfo INT,
