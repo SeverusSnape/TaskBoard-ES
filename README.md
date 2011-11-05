@@ -65,8 +65,10 @@ Instalar TaskBoard en un sistema Linux via SSH. Y opcionalmente esconderlo via T
 
 En Consola (Se necesita Root, o sudo en su defecto si es necesario): 
 
-Para Aptitude (si es necesario adapte los comandos de gestion de paqueteria a los de su distro, ej. yum)
+Para Aptitude (si es necesario adapte los comandos de gestion de paqueteria a los de su distro, ej. yum) (Tambien adapte los directorios si es necesario)
 
+
+    # cd /var/www
 
     # apt-update 
     
@@ -87,9 +89,9 @@ Configuración MySQL para TaskBoard (en el prompt MySQL como mysqlroot)
 
     mysql> CREATE DATABASE taskboard; 
     
-    mysql> CREATE USER 'tbuser'@'%' IDENTIFIED BY 'SomE_paSs'; 
+    mysql> CREATE USER 'tbuser'@'localhost' IDENTIFIED BY 'SomE_paSs';
     
-    mysql> GRANT ALL PRIVILEGES ON taskboard.* TO 'tbuser'@'%';
+    mysql> GRANT ALL PRIVILEGES ON taskboard.* TO 'tbuser'@'localhost';
 
 Edite settings.php con los datos de la BD, etc.
 
