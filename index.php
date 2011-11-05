@@ -181,8 +181,8 @@ switch($uri_parts[0]){
 						
 						Modificar Texto:
 							<FORM action='?<?php echo htmlspecialchars(SID); ?>&q=/tasks/submitnew' method='post' >
-						Title*:<BR>		<INPUT type='text' name='title'value='<?php echo $_POST['title'];?>'><BR>	
-						Message*:<br />	<textarea class='' rows=5 name='message'><?php echo $_POST['message'];?></textarea><BR>			
+						Titulo*:<BR>		<INPUT type='text' name='title'value='<?php echo $_POST['title'];?>'><BR>	
+						Mensaje*:<br />	<textarea class='' rows=5 name='message'><?php echo $_POST['message'];?></textarea><BR>			
 						Tags:<BR><INPUT type='text' name='tags' value='<?php echo $_POST['tags'];?>'><BR>
 
 							<input type="hidden" name="taskID" value="<?php //echo $_POST['taskID']; ?>"><br/>
@@ -191,9 +191,9 @@ switch($uri_parts[0]){
                             <INPUT type='hidden' name='password' value="<?php echo $_POST['password'];?>" >
 							<b>CAPTCHA:</b> 
 							<img src="./captcha/CaptchaSecurityImages.php?<?php echo htmlspecialchars(SID); ?>&width=100&height=40&characters=5" /><br />
-							<label for="security_code">Security Code: </label><input id="security_code" name="security_code" type="text" /><br />
+							<label for="security_code">C&oacute;digo de Seguridad: </label><input id="security_code" name="security_code" type="text" /><br />
 							<br />
-							<input type="submit" value="Submit" />	
+							<input type="submit" value="Enviar" />	
 						</form>
 						<?php	
 						exit;
@@ -201,11 +201,11 @@ switch($uri_parts[0]){
 
 
                     /*
-					Extract tag to array
+					Extraer tag al array
 					*/
-					//preg_replace('/[^a-zA-Z0-9\s]/', '', $text) - Removes nonalphanumeric char
+					//preg_replace('/[^a-zA-Z0-9\s]/', '', $text) - Remuve los caracteres no alfanumericos
                     $s_tag = isset($_POST['tags']) ? preg_replace('/[^a-zA-Z0-9\s]/', '', $_POST['tags']) : "";
-					// turn it into an array
+					// lo convierte en un array
 					$s_tag_array_1 = explode(' ', $s_tag);
 					//also extract any hashtags from the message itself
 					$hashtagmatch = preg_match_all( '/#(\w+)/', $_POST['title']." ".$_POST['message'] , $pregmatch);
@@ -214,14 +214,14 @@ switch($uri_parts[0]){
 					}else{
 						$s_tag_array_2 = array();
 					}
-					//merge s_tag_array_1 and s_tag_array_2 to s_tag_array
+					//une s_tag_array_1 y s_tag_array_2 a s_tag_array
 					$s_tag_array = array_merge( $s_tag_array_1 , $s_tag_array_2 );
 					$s_tag_array = array_unique( $s_tag_array );
 									
-                    //Insert password
+                    //inserta el pass
                     if( ( isset($_POST['password']) AND $_POST['password']!='' ) OR $keyFileBinary!=NULL){
                         $s_pass=__tripCode($_POST['password'].$keyFileBinary);
-                    }else{// If user give blank password, generate a new one for them
+                    }else{// nuevo pass
 						//$newpass = md5(mt_rand());
 						if($__hiddenServer){
 							$newpass = substr(md5(rand()),0,6);
@@ -229,25 +229,25 @@ switch($uri_parts[0]){
 							$newpass = substr(md5($_SERVER['REMOTE_ADDR']),0,6);
 						}
                         $s_pass=__tripCode($newpass);
-                        echo      "<div style='z-index:100;background-color:white;color:black;'>Your new password is: '<bold>".$newpass."</bold>' keep it safe! </div>";
+                        echo      "<div style='z-index:100;background-color:white;color:black;'>Tu nueva contrase&ntilde;a es: '<bold>".$newpass."</bold>' Cuidala. </div>";
 						echo		__prettyTripFormatter($s_pass);
                     }
                     
                     $newTaskID = $board->createTask($s_pass, $_POST['title'], $_POST['message'], $s_tag_array, $_POST['respondid'], $imageFileBinary);
-                    echo "Post submitted!<br/>";
+                    echo "Post Enviado!<br/>";
 					echo "Tags:".implode(" ",$s_tag_array)."<br/>";
-					echo "<a href='?q=/view/".$newTaskID."'>Click to go to your new task</a>";
-					echo "<meta http-equiv='refresh' content='10; url=?q=/view/".$newTaskID."'> Refreshing in 10 sec<br/>";
+					echo "<a href='?q=/view/".$newTaskID."'>Click pàra ir a el nuvo tema</a>";
+					echo "<meta http-equiv='refresh' content='10; url=?q=/view/".$newTaskID."'> Refrescando en 10 segundos<br/>";
 					exit;
                     break;
 					
                 /*
-                 * Submit and process the new Comment
+                 * envia y procesa el nuevo comentario
                  */
                 case 'comment':
 				
 					/*
-						Grab the latest keyfile and insert into $keyFileBinary
+						toma el ultimo archivo llave y lo mete en $keyFileBinary
 					*/
 					$keyFileBinary = __getKeyFile();
 					if ($keyFileBinary == NULL) {
@@ -259,15 +259,15 @@ switch($uri_parts[0]){
 						$_SESSION['keyFileBinary'] = $keyFileBinary;
 					}
 				
-                    //Only pass though message and title if it is set already
+                    //solo si el mensaje y el titulo estan seteados
                     if(!isset( $_POST['comment']) || empty($_POST['comment'])){
-                        echo "Missing comment \n";
-						echo "<a href='?q=/view/".$uri_parts[2]."'>Click to go back</a>";
+                        echo "Falta el Comentario \n";
+						echo "<a href='?q=/view/".$uri_parts[2]."'>Click para volver</a>";
 						exit;
                         break;
                     }
 					
-					// Also it must pass the capcha test
+					// debe pasar el captcha
 					if( isset($_POST['security_code'])) {
 						$first = false;
 					} else {
@@ -276,19 +276,19 @@ switch($uri_parts[0]){
 						$first = true;
 					}
 				   if( $_SESSION['security_code'] == $_POST['security_code'] && !empty($_SESSION['security_code'] ) ) {
-						echo 'Your captcha code was valid.';
+						echo 'Captcha valido.';
 						unset($_SESSION['security_code']);
 				   } else {
 						if ($first){
-							echo 'Please enter the captcha code to confirm your human status';
+							echo 'Por favor ingrese este captcha para probar que eres un humano';
 						}else{
-							echo 'Sorry, you have provided an invalid security code';
+							echo 'Captcha Invalido';
 						}
 
 						?>
 						<br/>
 						<br/>
-						Modify Text:
+						Moddificar Texto:
 						<form name="add_comment" action="?<?php echo htmlspecialchars(SID); ?>&q=/tasks/comment/<?php echo $_POST['taskID']; ?>" method="post" >
 							<textarea id="comment" name="comment"><?php echo $_POST['comment'];?></textarea>
 							<input type="hidden" name="taskID" value="<?php echo $_POST['taskID']; ?>"><br/>
@@ -296,27 +296,27 @@ switch($uri_parts[0]){
                             <INPUT type='hidden' name='password' value="<?php echo $_POST['password'];?>" >
 							<b>CAPTCHA:</b> 
 							<img src="./captcha/CaptchaSecurityImages.php?<?php echo htmlspecialchars(SID); ?>&width=100&height=40&characters=5" /><br />
-							<label for="security_code">Security Code: </label><input id="security_code" name="security_code" type="text" /><br />
+							<label for="security_code">Codigo de Seguridad: </label><input id="security_code" name="security_code" type="text" /><br />
 							<br />
-							<input type="submit" value="Submit" />	
+							<input type="submit" value="Enviar" />	
 						</form>
 						<?php	
 						exit;
 					}
 					
-					// check if message is up to scratch (is not stupid, and does not have spammy words)
+					// checkea si es un buen mensaje, no tiene spam, etc.
 					if( ! __postGateKeeper($_POST['comment']) ){
-                        echo "Your post was rejected by the gatekeeper. Did you make your post too small? 
-						Does it have too many mispelling? Or was it just plain stupid? \n";
+                        echo "Tu post fue rechazado por el portero. 
+						Era pequeño? Tenia errores ortograficos? \n";
 						exit;
 					};
 
-                    //Insert password
+                    //inserte pass
                     if( ( isset($_POST['password']) AND $_POST['password']!='' ) OR $keyFileBinary!=NULL){
                         $s_pass=__tripCode($_POST['password'].$keyFileBinary);
-						echo "<meta http-equiv='refresh' content='3; url=?q=/view/".$uri_parts[2]."'> Refreshing in 3 sec";
+						echo "<meta http-equiv='refresh' content='3; url=?q=/view/".$uri_parts[2]."'> Refrescando en 3 segundos";
                     }else{
-						// If user give blank password, generate a new one for them                  
+						// nuevo pass                 
 						//$newpass = md5(mt_rand());
 						if($__hiddenServer){
 							$newpass = substr(md5(rand()),0,6);
@@ -324,22 +324,22 @@ switch($uri_parts[0]){
 							$newpass = substr(md5($_SERVER['REMOTE_ADDR']),0,6);
 						}
                         $s_pass=__tripCode($newpass);
-                        echo      "<div style='z-index:100;background-color:white;color:black;'>Your new password is: '<bold>".$newpass."</bold>' keep it safe! </div>";
+                        echo      "<div style='z-index:100;background-color:white;color:black;'>Tu nuevo pass es: '<bold>".$newpass."</bold>' Cuidalo </div>";
 						echo		__prettyTripFormatter($s_pass);
                     }
 
 					$board->createComment($s_pass, $uri_parts[2], $replyID=NULL, $_POST['comment'], 1);
-                    echo "Post submitted!\n";
-					echo "<a href='?q=/view/".$uri_parts[2]."'>Click to go back</a>";
-					echo "<meta http-equiv='refresh' content='5; url=?q=/view/".$uri_parts[2]."'> Refreshing in 5 sec<br/>";
+                    echo "Post Enviado\n";
+					echo "<a href='?q=/view/".$uri_parts[2]."'>Click para ir atras</a>";
+					echo "<meta http-equiv='refresh' content='5; url=?q=/view/".$uri_parts[2]."'> Refrescando en 3 segundos<br/>";
 					exit;
                     break;
 
                 /*
-                 * Search for a task
+                 * busca un tema
                  */
                 case 'search':
-                    // If we're posting a search, redirect to the URL search (helps copy/pasting URLs)
+                    // postear una busqueda
                     if(isset($_POST['tags'])){
 						$tags_string = isset($_POST['tags']) ? preg_replace('/[^a-zA-Z0-9\s]/', '', $_POST['tags']) : "";
                         $tags = explode(' ', $tags_string);
@@ -363,7 +363,7 @@ switch($uri_parts[0]){
                     break;
 
                 /*
-                 * Delete a task
+                 * borrar tema
                  */
                 case 'delete':
 					
@@ -372,26 +372,26 @@ switch($uri_parts[0]){
 						$pass = substr(md5($_SERVER['REMOTE_ADDR']),0,6);
 					}
 
-					if(!is_numeric($_POST['taskID'])){Echo "YOU FAIL";exit;}
+					if(!is_numeric($_POST['taskID'])){Echo "HAS FALLADO";exit;}
                     $s_array[0]=$_POST['taskID'];
 					
                     $s_array[1]=__tripCode($pass);
 					
 					/*
-						Moderator delete
+						Mods
 					*/
 					if (array_key_exists($s_array[1],$__superModeratorByTrip)){
-						$command = 'Delete a post';
+						$command = 'Borrar un Post';
 						$board->delTaskBy($command,$s_array);
 						break;
 					}
 					
 					/*
-					//normal password delete
+					//borrado normal por pass
 					*/
 					var_dump($s_array);
                     //print_r($s_array);
-                    $command = 'Delete single task with normal password';
+                    $command = 'Borrar un solo tema con contrase&ntilde;a';
                     $board->delTaskBy($command,$s_array);
                     break;
 					
@@ -401,14 +401,14 @@ switch($uri_parts[0]){
         break;
 
     /*
-     * Get Image from a task and print it out to user.
+     * obtiene imagen
      */
     case 'image':
 		$taskid =$uri_parts[1];
 		
-        if(!is_numeric($uri_parts[1])){Echo "YOU FAIL";exit;}
+        if(!is_numeric($uri_parts[1])){Echo "HAS FALLADO";exit;}
 		
-		// support thumbnails
+		// miniaturas
         if(isset($_GET['mode'])){
 			if($_GET['mode']== 'thumbnail'){
 				$tasks = $board->getTaskFileByID($taskid,'thumbnail');
@@ -416,50 +416,48 @@ switch($uri_parts[0]){
 		}
 		
 		
-		//Retrieve the image and display it
+		//muestra la imagen
         $tasks = $board->getTaskFileByID($taskid,'image');
         break;
 		
     /*
-     * Stuff relating to browsing and searching tasks
-		basically we view specific task here
+     * busquedas y navegacion en temas
      */
     case 'view':
         $mode = array('tasksView');
 		$taskid =$uri_parts[1];
 		
-        if(!is_numeric($uri_parts[1])){Echo "YOU FAIL";exit;}
+        if(!is_numeric($uri_parts[1])){Echo "HAS FALLADO";exit;}
         
-		//Retrieve the task and get its comments
+		//obtiene coments
         $tasks = $board->getTaskByID($taskid);
         $tagsused = $board->tagsByID($taskid);
         $comments = $board->getCommentsByTaskId($taskid);
         break;
 
     /*
-     * Stuff relating to displaying the 'task' as an A4 printable page.
-		basically we view specific task here
+     * Temas como hoja A4
      */
     case 'printview':
         $mode = array('tasksView');
 		$taskid =$uri_parts[1];
 		
-        if(!is_numeric($uri_parts[1])){Echo "YOU FAIL";exit;}
+        if(!is_numeric($uri_parts[1])){Echo "HAS FALLADO";exit;}
         
-		//Retrieve the task and get its comments
+		//obtiene coments
         $tasks = $board->getTaskByID($taskid);
 
-		//Load the layout
+		//carga el layout
 		require("printlayout.php");
 		exit;
         break;
 		
 	case 'ajaxcomments':
-		/*Ajax Update Commands go here*/
+		/*comentarios ajax*/
 		$mode = array('tasksView');
 		$taskid = $_POST['taskid'];
 		
-        //Retrieve latest comment
+        //ultimo coment
         $comments = $board->getCommentsByTaskId($taskid);
 		
 		echo __commentDisplay($comments);
@@ -468,15 +466,15 @@ switch($uri_parts[0]){
 		break;
 		
 	case 'ajaxtasks':
-		/*Ajax Update Commands go here*/
+		/*mas ajax para temas*/
 		$mode = array('tasksList');
 		
 		$tags = explode(',', $_POST['tags']);
 		
-        //Retrieve latest comment
+        //ultimo coment
         $tasks = $board->getTasks($tags);
 		
-		//referral tag for the 'clone' task feature
+		//tag para la funcion clone
 		if (!empty($tags)){
 			$referraltag = $tags[0];
 		} else {
@@ -499,7 +497,7 @@ switch($uri_parts[0]){
 		$tags = array_merge( explode(',', $uri_parts[1]) , $tags);
 		}
 
-        //Retrieve latest comment
+        //obtiene ultimo comment
         $tasks = $board->getTasks($tags);
 		
 		?>
@@ -512,9 +510,9 @@ switch($uri_parts[0]){
 		<body>
 		<div id="newTask" class="greybox">
 			<?php if (!empty($tags)){?>
-				<a target="_blank" href="?q=/tasks/new&tag=<?php echo $tags[0];?>">Post New</a>
+				<a target="_blank" href="?q=/tasks/new&tag=<?php echo $tags[0];?>">Nuevo Post</a>
 			<?php } else {?>
-				<a target="_blank" href="?q=/tasks/new">Post New</a>
+				<a target="_blank" href="?q=/tasks/new">Nuevo Post</a>
 			<?php }?>
 		</div>
 		<div id="taskDIV" class="tasklist">
@@ -547,7 +545,7 @@ switch($uri_parts[0]){
 		//$rssfeed .= "\n";
 		//$rssfeed .= '<link></link>';
 		$rssfeed .= "\n";
-		$rssfeed .= '<description>This is the RSS feed for TaskBoard</description>';
+		$rssfeed .= '<description>Este es el Feed RSS de TaskBoard</description>';
 		$rssfeed .= "\n";
 		$rssfeed .= '<language>en-us</language>';
 		//$rssfeed .= "\n";
@@ -555,18 +553,18 @@ switch($uri_parts[0]){
 		$rssfeed .= "\n\n\n";
 
 		
-        //Retrieve latest comment
+        //ultimo coment
         $tasks = $board->getTasks($tags);
 
 		foreach($tasks as $rowtask) {	
-			// link dir detector
-			$url = $_SERVER['REQUEST_URI']; //returns the current URL
+			// link dir
+			$url = $_SERVER['REQUEST_URI']; //url actual
 			$parts = explode('/',$url);
 			$linkdir = $_SERVER['SERVER_NAME'];
 			for ($i = 0; $i < count($parts) - 2; $i++) {
 			 $linkdir .= $parts[$i] . "/";
 			}
-			//RSS entry
+			//entrada RSS
 			$rssfeed .= '<item>';
 					$rssfeed .= "\n";
 			$rssfeed .= '<title>(Trip:' . preg_replace('/[^a-zA-Z0-9\s]/', '', $rowtask['tripcode']).") - ".preg_replace('/[^a-zA-Z0-9\s]/', '', $rowtask['title'] ). '</title>';
@@ -594,16 +592,16 @@ switch($uri_parts[0]){
 		break;
 		
     /*
-     * The default thing we want to do is get tags.
+     * obtener tags por defecto
      */
     default:
         
     /*
-     * Get tags
+     * obtiene tags
      */
     case 'tags':
 	
-        // Browsing/searching the tasks
+        // navega/busca tags
         $mode = array('tasksList');
         
         if (isset($uri_parts[1])) {
@@ -616,7 +614,7 @@ switch($uri_parts[0]){
             $tags = array();                            
         }
 		
-		//for tagclouds
+		//nube de tags
 		if(empty($tags)){
 			$tagClouds = $board->tagsWeight(500);
 		}
@@ -628,8 +626,8 @@ switch($uri_parts[0]){
         
 }
 
-//Create the layout
-if(!isset($mode)) $mode = array(); //set default mode (should be error page perhaps)
+//Crea layout
+if(!isset($mode)) $mode = array(); //modo por defecto (tal vez deberia existir una pagina de error)
 $top_tags = $board->topTags(10);
 require("layout.php");
             
