@@ -1,12 +1,12 @@
 <?php
-// Set timezone to UTC
+// Setear zona horaria por defecto a UTC
 date_default_timezone_set('UTC'); 
 
-// Deals with the annoying problem of 'get_magic_quotes_gpc' in some shared hosting
-// Source: http://stackoverflow.com/questions/517008/how-to-turn-off-magic-quotes-on-shared-hosting
+// Arregla con el agotador problema 'get_magic_quotes_gpc' en algunos hostings compartidos
+// Fuente: http://stackoverflow.com/questions/517008/how-to-turn-off-magic-quotes-on-shared-hosting
 /*
-// This appeared to not escape _POST properly (e.g. it also escape \r\n. where /r/n is how linux/UNIX sees it... 
-// this means magicquote won't touch \r\n as its not "/", but strip slash would. Which is a recipe for trouble) 
+// Esto parece que no procesaba _POST bien (ejemplo: Tambien se escapa \r\n. Donde /r/n es como linux/UNIX lo ve... 
+// esto significa que magicquotes no tocara \r\n como no es "/", pero si podria una barra. Es una receta para un problema) 
 if (get_magic_quotes_gpc() === 1)
 {
     $_GET = json_decode(stripslashes(json_encode($_GET, JSON_HEX_APOS)), true);
@@ -15,7 +15,7 @@ if (get_magic_quotes_gpc() === 1)
     $_REQUEST = json_decode(stripslashes(json_encode($_REQUEST, JSON_HEX_APOS)), true);
 }
 */
-// This one appears to be workable? (Honestly... just disable magic_quotes_gpc )
+// ¿Este parece que funciona? (Honestamente, tan solo desactiva magic_quotes_gpc )
 if ( in_array( strtolower( ini_get( 'magic_quotes_gpc' ) ), array( '1', 'on' ) ) )
 {
     $_POST = array_map( 'stripslashes', $_POST );
@@ -24,72 +24,72 @@ if ( in_array( strtolower( ini_get( 'magic_quotes_gpc' ) ), array( '1', 'on' ) )
 }
 
 
-// session system to help store not yet approved 'files'
-// or images, while capcha is being processed.
+// El sistema de sesiones ayudara a almacenar los archivos todavia no aprobados
+// o imagenes, mientra el captcha es procesado
 ini_set("session.use_cookies",0);
 ini_set("session.use_only_cookies",0);
 //ini_set("session.use_trans_sid",1);
 session_start();
 
-//Initialize required files
+//Importar los archivos necesarios
 require_once("settings.php");
 require_once("LayoutEngine.php");
 require_once("Database.php");
 require_once("Taskboard.php");
 require_once("anonregkit.php");
 
-// For Rendering documents
+// Para documentos de renderizado
 require_once("./phpmarkdown/markdown.php");
 require_once("./htmlpurifier/library/HTMLPurifier.auto.php");
 //require("./asciicaptcha/asciicaptcha.php");
 
 
-//Open up the database connection
+//Abrir la conexion a la DB
 Database::openDatabase('rw', $config['database']['dsn'], $config['database']['username'], $config['database']['password']);
 
-//Get the desired page
+//Obtener la pagina deseada
 $uri = isset($_GET['q']) ? $_GET['q'] : '/';
 $uri_parts = explode('/', trim($uri, '/'));
 
-//Create our Taskboard object
+//Crear el objeto Taskboard
 $board = new Taskboard();
 $board->task_lifespan = $config['tasks']['lifespan'];
 
-//Determine our task
+//Determinar nuestra tarea
 switch($uri_parts[0]){
     /*
-     * Test stuff
+     * Cosas de Pruebas
      */
     case 'init':
-        // Insert test data if requested..
-        // activate by typing ?q=/init
-		if (!$__initEnable) {echo 'Permission Denied. init command disabled';exit;}
+        // Inserte datos de prueba si es necesario
+        // activarlo con ?q=/init
+		if (!$__initEnable) {echo 'Acceso Denegado. Comando Init Deshabilitado';exit;}
         $board->initDatabase();
-        if($__debug)$board->createTask('23r34r', 'My first', 'This could be my second.. but blahh', array('first', 'misc'));
-        if($__debug)$board->createTask('23r34r', 'Poster needed', 'I kinda need a poster making, gotta be x y z', array('graphics', 'first'));
-        if($__debug)$board->createTask('23r34r', 'Make me music!', 'Please.. I need music', array('music', 'misc'));
-        if($__debug)$board->createTask('23r34r', 'something', 'something something something something something', array('misc'));
-        if($__debug)$board->createTask('23r34r', 'website time', 'Website called google.com, itl be a search engine', array('graphics', 'technical'));
-        if($__debug)echo "Inserted test data\n";
-        $board->createTask('Anonymous', 'Welcome To TaskBoard', 'This is the first post of TaskBoard, now try out search and submit function!', array('firstpost'));
+        if($__debug)$board->createTask('23r34r', 'Mi Primer', 'Este podria ser mi segundo pero blah blah blah', array('first', 'misc'));
+        if($__debug)$board->createTask('23r34r', 'Necesito un Poster', 'Necesito un poster de alpha+omega', array('graphics', 'first'));
+        if($__debug)$board->createTask('23r34r', 'Hacedme musica', 'Por favor, necesito musica', array('music', 'misc'));
+        if($__debug)$board->createTask('23r34r', 'algo', 'algo algo algo lago', array('misc'));
+        if($__debug)$board->createTask('23r34r', 'Google', 'Sitio web llamado Google.com, sera un motor de busqueda', array('graphics', 'technical'));
+        if($__debug)echo "Datos de prueba Insertados\n";
+        $board->createTask('Anonymous', 'Bienvenido a TaskBoard', 'Este es el primer post de TaskBoard, ahora intenta probar las funciones buscar y enviar.', array('firstpost'));
 
         break;
 
     /*
-     * Task-related stuff
+     * Cosas Relacionadas con Las Tareas
      */
     case 'tasks':
-        //Check if we want a task
+        //Checkear si queremos una tarea
         if (isset($uri_parts[1])) {
             switch($uri_parts[1]){
                 /*
-                 * Make a new task
+                 *hacer una nueva tarea
                  */
                 case 'new':
                     $mode = array('submitForm');
 					
 					/*
-						Response to, or clone of a post.
+						Responder a, o clonar un post
 					*/
 						if( isset($_POST['respondtaskid']) ) {
 							$responding_taskid =$_POST['respondtaskid'];
@@ -99,8 +99,8 @@ switch($uri_parts[0]){
 							$responding_taskid = "";
 						}
 						if( $responding_taskid != "" ){
-							if(!is_numeric($responding_taskid)){Echo "YOU FAIL";exit;}
-							//Retrieve the task and get its comments
+							if(!is_numeric($responding_taskid)){Echo "HAS FALLADO";exit;}
+							//Obtener temas y sus comentarios
 							$responding_to_task = $board->getTaskByID($responding_taskid);
 							$responding_to_task = $responding_to_task[0];
 						} else {
@@ -110,12 +110,12 @@ switch($uri_parts[0]){
                     break;
 
                 /*
-                 * Submit and process the new task
+                 * Enviar y procesar el nuevo tema
                  */
                 case 'submitnew':
 
 					/*
-						Grab the latest photos and insert into $imageFileBinary
+						Obtener las ultimas fotos de $imageFileBinary
 					*/
 					$imageFileBinary = __getImageFile();
 					if ($imageFileBinary == NULL) {
@@ -128,7 +128,7 @@ switch($uri_parts[0]){
 					}
 					
 					/*
-						Grab the latest keyfile and insert into $keyFileBinary
+						Obtener el ultimo archivo llave y ponerlo en $keyFileBinary
 					*/
 					$keyFileBinary = __getKeyFile();
 					if ($keyFileBinary == NULL) {
@@ -140,23 +140,23 @@ switch($uri_parts[0]){
 						$_SESSION['keyFileBinary'] = $keyFileBinary;
 					}
 					
-                    //Only pass though message and title if it is set already
+                    //Solo pasa si el mensaje y el titulo estan seteados
                     if(!isset($_POST['title'], $_POST['message']) || empty($_POST['title']) || empty($_POST['message'])){
-                        echo "<b>Missing title and/or message </b> \n";
+                        echo "<b>Falta el Titulo o el Mensaje</b> \n";
 						$missingfield = true;
                     } else {
 						$missingfield = false;
 					}
 					
 					
-					// check if message is up to scratch (is not stupid, and does not have spammy words)
+					// Checkear si el mensaje es nuevo y limpio (no es estupido, no es epic respost, no spam, no es corto)
 					if( ! __postGateKeeper($_POST['message']) ){
-                        echo "Your post was rejected by the gatekeeper. Did you make your message too small? 
-						Does it have too many mispelling? Or was it just plain stupid? \n";
+                        echo "Tu post ha sido denegado por el portero. Acaso es muy corto? 
+						Tiene muchos errores ortograficos? O fue planeado para ser estupido? \n";
 						exit;
 					};
 
-					// Also it must pass the capcha test
+					// Tambien debe pasar el captcha
 					if( isset($_POST['security_code'])) {
 						$first = false;
 					} else {
@@ -166,20 +166,20 @@ switch($uri_parts[0]){
 					}
 					
 				   if( ($missingfield == false) && ($_SESSION['security_code'] == $_POST['security_code'] && !empty($_SESSION['security_code'] ))  ) {
-						echo 'Your captcha code was valid.';
+						echo 'Captcha Valido.';
 						unset($_SESSION['security_code']);
 				   } else {
 						if ($first){
-							echo 'Please enter the captcha code to confirm your human status';
+							echo 'Por favor ingrese este captcha para confirmar que es un humano y no un robot o una aspiradora';
 						}else{
-							echo 'Sorry, you have provided an invalid security code';
+							echo 'Lo sentimos, el codigo no es correcto';
 						}
 
 						?>
 						<br/>
 						<br/>
 						
-						Modify Text:
+						Modificar Texto:
 							<FORM action='?<?php echo htmlspecialchars(SID); ?>&q=/tasks/submitnew' method='post' >
 						Title*:<BR>		<INPUT type='text' name='title'value='<?php echo $_POST['title'];?>'><BR>	
 						Message*:<br />	<textarea class='' rows=5 name='message'><?php echo $_POST['message'];?></textarea><BR>			
