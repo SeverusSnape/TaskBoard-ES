@@ -1,41 +1,50 @@
-About
+26% Translated
+=================================
+
+TaskBoard
+
+Now in Spanish! - ¡Ahora en Español!
+
+Acerca De
 ======
-A task board, enabling anons around the world to:
+Un Foro, permitiendo a los Anons del mundo:
 
-* Post small tasks, ex. "Make poster for #SomeOp"
-* Reply to tasks with a message or file upload
-* Bump tasks when they receive participants
-* Search for tasks by language, country, tags
-* Delete tasks using a password or keyfile
-* Use all functionality without registering (with captcha)
+* Postear Temas pequeños, ej. "Hacer Poster para #OpSosis"
+* Responder a los Temas con un mensaje o con un Archivo
+* Influenciar Temas cuando reciben mas Participantes
+* Buscar Temas por idioma, pais, tags, etc.
+* Borrar temas usando una contraseña o un archivo llave
+* Usar todas las funciones sin registro (Con Captchas)
 
-Tasks:
+Temas:
 
-* Begin life at the top of the Recent Tasks board
-* Drift downward as other tasks are created or bumped
-* Move to the Active Tasks board while receiving heavy participation
-* Expire after 24 hours without activity
+* Empiezan su Vida en la parte superior de "Temas Recientes"
+* Empiezan a decender mientras se crean mas temas u otros reciben mayor participación
+* Se Mueven a la sección de "Temas Activos" cuando llegan a una gran cantidad de actividad.
+* Expiran después de 24 Horas sin actividad.
 
-Stuff that still needs to be coded:
-* Moderation/Admin
-* Voting
-* Spam filter
-* Stickied message per tag ( goes to the top of the page on particular tags)
+Cosas que necesitan ser programadas:
 
-Requirments
+* Panel y Herramientas de Moderación/Admin
+* Calificaciones
+* Filtro de Spam
+* Tema Sticky en Tags (Se mantienen en la parte superior de la sección del tag)
+
+Requerimientos
 ======
 
 * PHP
 * SQLite
+* HTTPd o cualquier otro servidor HTTP.
 
-Install
+Instalación
 ======
 
-Simply place the contents of this repository in a suitable place on your webserver.
+Simplemente copia los contenidos de este Repo en el lugar que quieras de tu web server de elección.
 
-If necessary, initialize the database by navigating to /index.php?q=/init
+Si es necesario, inicializa la DB navegando a: /index.php?q=/init
 
-also if there is an error still, please check index.php settings, to see if it matches this
+Si sigue existiendo un error, checkea la configuración de index.php y mira si concuerda con esto:
 
     // Settings
             $config_str = <<<SETTINGS
@@ -51,9 +60,9 @@ also if there is an error still, please check index.php settings, to see if it m
     password =
     SETTINGS;
 
-Todo
+Por Hacer
 ======
-+ Moderation/Admin
-+ Messaging
-+ Voting
-+ Stickied message per tag ( goes to the top of the page on particular tags)
++ Panel y Herramientas de Moderación/Admin
++ Mensajeria
++ Calificaciones
++ Stickys
