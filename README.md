@@ -1,4 +1,4 @@
-27% Translated
+30% Translated
 =================================
 
 TaskBoard
