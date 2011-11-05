@@ -608,9 +608,9 @@ created INTEGER
 			default:
 			case "mysql":
 				$sql[] = <<<SQL
-CREATE TABLE IF NOT EXISTS tasks ( 
-id INTEGER NOT NULL AUTO_INCREMENT,
-md5id VARCHAR(25),
+CREATE TABLE IF NOT EXISTS tasks (
+id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+md5id VARCHAR(40),
 tripcode VARCHAR(25),
 status INT ,
 created INT ,
