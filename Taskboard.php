@@ -639,14 +639,13 @@ SQL;
 
 				//Create comments table
 				$sql[] = "CREATE TABLE IF NOT EXISTS comments (
-id INTEGER NOT NULL AUTO_INCREMENT,
+INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
 task_id INT NOT NULL,
 tripcode VARCHAR(25),
 reply_comment_id INT,
 created INT,
 message TEXT,
-vote INT,
-PRIMARY KEY (id)
+vote INT
 );";
 
 				//Uniqueness check (for enforcing originality
