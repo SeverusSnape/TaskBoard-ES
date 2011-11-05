@@ -1,4 +1,4 @@
-26% Translated
+27% Translated
 =================================
 
 TaskBoard
@@ -37,7 +37,7 @@ Requerimientos
 * SQLite
 * HTTPd o cualquier otro servidor HTTP.
 
-Instalación
+Instalación (Antigua)
 ======
 
 Simplemente copia los contenidos de este Repo en el lugar que quieras de tu web server de elección.
@@ -59,6 +59,32 @@ Si sigue existiendo un error, checkea la configuración de index.php y mira si c
     username = 
     password =
     SETTINGS;
+
+Instalar TaskBoard en un sistema Linux via SSH. Y opcionalmente esconderlo via Tor
+======
+
+En Consola (Se necesita Root, o sudo en su defecto si es necesario): 
+
+Para Aptitude
+    # apt-update 
+    # apt-get install tor apache2 php5 mysql_server mysql_client php5-gd php5-mysql unzip wget
+    $ wget https://github.com/corneyflorex/TaskBoard/zipball/master --no-check-certificate
+    $ unzip master
+    $ mv corneyflorex-TaskBoard-XXXXXXX/* 
+    $ rm corneyflorex-TaskBoard-XXXXXXX/
+
+Edite php.ini, (ejecute 'php --ini' si no lo puede encontrar) asegurese que contiene el equivalente de (no siempre puede tener la misma ruta, si no lo encuentra simplemente ejecute 'find | grep pdo_mysql.so' mot just 'find | grep pdo_mysql.so') extension=/usr/lib/php5/20090626/mysql.so extension=/usr/lib/php5/20090626/pdo_mysql.so extension=/usr/lib/php5/20090626/gd.so
+
+Configuración MySQL para TaskBoard (en el prompt MySQL como mysqlroot) 
+    mysql> CREATE DATABASE taskboard; 
+    mysql> CREATE USER 'tbuser'@'%' IDENTIFIED BY 'SomE_paSs'; 
+    mysql> GRANT ALL PRIVILEGES ON taskboard.* TO 'tbuser'@'%';
+
+Edite settings.php con los datos de la BD, etc.
+
+Cargue esta pagina en su navegador: http://[HOST]/?q=/init
+
+Asegurese que: /etc/apache2/mods-enabled contiene 'php5.conf' y 'php5.load'
 
 Por Hacer
 ======
