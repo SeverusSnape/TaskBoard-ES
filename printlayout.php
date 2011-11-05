@@ -53,24 +53,24 @@
 </head>
 
 
-<?php $task = $tasks[0]; //get the first displayed task entry from the array. ?>
+<?php $task = $tasks[0]; // Obtener el primer tema a mostrar desde el array. ?>
 
 <body >
 	<div id="header">
-		<form><input type="button" value=" Print this page "
+		<form><input type="button" value=" Imprimir esta P&aacute;gina "
 		onclick="window.print();return false;" /></form> 
 	</div>
 
 	<div id="pageborder">
 	<div id="metainfo">
-		<span style='font-size:0.6em;' ><i><div id='OPGUID' >Created On: <?php echo substr( date('F j, Y, g:i a', $task['created']) ,0,-9);?></div></i></span>
+		<span style='font-size:0.6em;' ><i><div id='OPGUID' >Creado en: <?php echo substr( date('F j, Y, g:i a', $task['created']) ,0,-9);?></div></i></span>
 		<span style='font-size:0.6em;' ><i><div id='DOCID'  >DocID(md5): <?php echo md5($task['message']); ?> </div></i></span>
 	</div>
 	<div id="content">
 		
 		
 		<?php 
-		// Grab latest image if it exist
+		// Obtiene la imagen mas reciente si existe
 		if($task['imagetype'] != NULL){ 
 		?>
 			<div style="text-align:center;margin-bottom:3em;">
@@ -96,17 +96,17 @@
 		<hr>
 		<h2>Doc Info:</h2>
 		<?php echo __prettyTripFormatter($task['tripcode']);?>
-		<span class="title">TITLE: <?php echo htmlentities(stripslashes($task['title']),null, 'utf-8'); ?> </span>
+		<span class="title">TITULO: <?php echo htmlentities(stripslashes($task['title']),null, 'utf-8'); ?> </span>
 		<br>
-		<span>Created: <?php echo date('F j, Y, g:i a', $task['created']);?></span>
+		<span>Creado: <?php echo date('F j, Y, g:i a', $task['created']);?></span>
 		<br>
 		<span style='font-size:0.6em;' ><i><div id='OPGUID' >MD5 Global ID: <?php echo md5($task['message']); ?></div></i></span>
 		<br>
 		<br>
-		This page is rendered via markdown <a href="http://en.wikipedia.org/wiki/Markdown"> click here for more infomation about markdown</a>
+		Esta p&aacute;gina esta renderizada por markdowns, <a href="http://es.wikipedia.org/wiki/Markdown"> clickee aqui para mas informaci&oacute;n acerca de los markdowns</a>
 		<br>
 		<br>
-		Share this paper:
+		Comparte esto:
 		<br>
 		<img style='width:100px' src="http://qrcode.kaywa.com/img.php?s=8&amp;d=http%3A%2F%2F<?php if(isset($_SERVER["SERVER_NAME"]) AND isset($_SERVER["REQUEST_URI"]) )echo $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];?>"></a> 
 		<br>
@@ -115,7 +115,7 @@
 		</a> 
 		<br>
 		<br>
-		<a href="?q=/view/<?php echo $taskid?>">back to discussion page</a> 
+		<a href="?q=/view/<?php echo $taskid?>">atras a la p&aacute;gina de discusi&oacute;n</a> 
 	</div>
 	
 </body>
